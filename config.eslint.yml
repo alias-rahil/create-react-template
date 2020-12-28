@@ -1,0 +1,26 @@
+extends:
+  - airbnb
+  - react-app
+settings:
+  import/resolver:
+    node:
+      extensions:
+        - .ts
+        - .tsx
+rules:
+  react/jsx-indent:
+    - error
+    - 4
+  indent:
+    - error
+    - 4
+  react/jsx-filename-extension:
+    - 1
+    - allow: as-needed
+      extensions:
+        - .tsx
+  import/extensions:
+    - error
+    - ignorePackages
+    - ts: never
+      tsx: never

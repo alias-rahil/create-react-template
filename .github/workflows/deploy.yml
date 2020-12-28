@@ -1,0 +1,60 @@
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH_NAME: gh-pages
+      BASE_BRANCH_NAME: "${{ github.head_ref }}"
+      REPO_NAME: "${{ github.event.repository.name }}"
+      REPO_OWNER: "${{ github.event.repository.owner.name }}"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/github-script@v3
+        id: set-result
+        with:
+          result-encoding: string
+          script: >
+            const { join } = require('path');
+
+            const { writeFileSync, readFileSync } = require('fs');
+
+            let { REPO_OWNER, REPO_NAME } = process.env;
+
+            REPO_OWNER = REPO_OWNER.toLowerCase();
+
+            REPO_NAME = REPO_NAME.toLowerCase();
+
+            if (REPO_NAME === `${REPO_OWNER}.github.io`) {
+                return '';
+            }
+
+            const path = join(process.env.GITHUB_WORKSPACE, 'public',
+            '404.html');
+
+            const notFoundPage = readFileSync(path, { encoding: 'utf8' });
+
+            const newNotFoundPage = notFoundPage.replace('const
+            pathSegmentsToKeep = 0;', 'const pathSegmentsToKeep = 1;');
+
+            writeFileSync(path, newNotFoundPage);
+
+            return `/${REPO_NAME}`;
+      - run: >
+          sudo npm install -g npm@latest
+
+          npm ci --only=production
+
+          PUBLIC_URL=${{steps.set-result.outputs.result}} npm run build
+
+          git config user.name $REPO_OWNER
+
+          git add -f build
+
+          git commit --amend --allow-empty-message -m '' --reset-author
+
+          git push origin `git subtree split --prefix build
+          $BASE_BRANCH_NAME`:$TARGET_BRANCH_NAME --force ||  git subtree push
+          --prefix build origin $TARGET_BRANCH_NAME
