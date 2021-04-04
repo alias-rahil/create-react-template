@@ -1,0 +1,2 @@
+(this["webpackJsonpcreate-react-template"]=this["webpackJsonpcreate-react-template"]||[]).push([[3],{87:function(e,t,c){"use strict";c.r(t);var n=c(6),a=c(1),r=c(23),s=Object(a.lazy)((function(){return c.e(4).then(c.bind(null,95))}));t.default=function(){return Object(r.jsxs)(n.d,{children:[Object(r.jsx)(n.b,{exact:!0,path:"/",children:Object(r.jsx)(s,{})}),Object(r.jsx)(n.b,{children:Object(r.jsx)(n.a,{to:"/"})})]})}}}]);
+//# sourceMappingURL=3.ac9e42fe.chunk.js.map
